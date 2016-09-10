@@ -33,7 +33,7 @@ public class PercolationStats {
         for (int trial = 0; trial < trials; trial++) {
             Percolation p = new Percolation(n);
             int opened = 0;
-            
+
             while (!p.percolates()) {
                 int i = StdRandom.uniform(1, n + 1);
                 int j = StdRandom.uniform(1, n + 1);
@@ -46,7 +46,7 @@ public class PercolationStats {
                 p.open(i, j);
                 opened++;
             }
-            
+
             collectedPercolationThresholds[trial] = (double) opened
                     / (double) (n * n);
         }
@@ -56,7 +56,7 @@ public class PercolationStats {
      * 
      * @return calculated mean
      */
-    public final double mean() {
+    public double mean() {
         return StdStats.mean(collectedPercolationThresholds);
     }
 
@@ -65,7 +65,7 @@ public class PercolationStats {
      * 
      * @return standard deviation of pt
      */
-    public final double stddev() {
+    public double stddev() {
         return StdStats.stddev(collectedPercolationThresholds);
     }
 
@@ -74,7 +74,7 @@ public class PercolationStats {
      * 
      * @return low endpoint
      */
-    public final double confidenceLo() {
+    public double confidenceLo() {
         return mean() - confidenceIntervalConstant * stddev()
                 / Math.sqrt(collectedPercolationThresholds.length);
     }
@@ -84,7 +84,7 @@ public class PercolationStats {
      * 
      * @return high endpoint
      */
-    public final double confidenceHi() {
+    public double confidenceHi() {
         return mean() + confidenceIntervalConstant * stddev()
                 / Math.sqrt(collectedPercolationThresholds.length);
     }
@@ -102,9 +102,9 @@ public class PercolationStats {
         int n = Integer.parseInt(args[0]);
         int trials = Integer.parseInt(args[1]);
         PercolationStats ps = new PercolationStats(n, trials);
-        StdOut.printf("%-24s = %.15f\n", "mean", ps.mean());
-        StdOut.printf("%-24s = %.15f\n", "stddev", ps.stddev());
-        StdOut.printf("%-24s = %.15f, %.15f\n", "95% confidence interval",
+        StdOut.printf("%-23s = %.15f\n", "mean", ps.mean());
+        StdOut.printf("%-23s = %.15f\n", "stddev", ps.stddev());
+        StdOut.printf("%-23s = %.15f, %.15f\n", "95% confidence interval",
                 ps.confidenceLo(), ps.confidenceHi());
     }
 

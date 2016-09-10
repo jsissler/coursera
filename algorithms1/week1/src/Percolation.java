@@ -101,7 +101,7 @@ public class Percolation {
      * @param row row 1-n
      * @param column col 1-n
      */
-    public final void open(final int row, final int column) {
+    public void open(final int row, final int column) {
         checkRowColIndices(row, column);
 
         if (!isOpen(row, column)) {
@@ -143,7 +143,7 @@ public class Percolation {
      * @param j col 1-n
      * @return if site is open.
      */
-    public final boolean isOpen(final int i, final int j) {
+    public boolean isOpen(final int i, final int j) {
         checkRowColIndices(i, j);
         return isOpen[gridIndex(i, j)];
     }
@@ -155,7 +155,7 @@ public class Percolation {
      * @param j col 1-n
      * @return if site is open and connected to top row
      */
-    public final boolean isFull(final int i, final int j) {
+    public boolean isFull(final int i, final int j) {
         checkRowColIndices(i, j);
         return isOpen(i, j)
                 && ufWithTop.connected(gridIndex(i, j), virtualTopRow);
@@ -166,7 +166,7 @@ public class Percolation {
      * 
      * @return true if percolates
      */
-    public final boolean percolates() {
+    public boolean percolates() {
         return ufWithTopBottom.connected(virtualTopRow, virtualBottomRow);
     }
 }
