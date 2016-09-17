@@ -35,7 +35,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * @param size - new size of data array
      */
     private void resize(int newSize) {
-        @SuppressWarnings("unchecked")
         Item[] resizedData = (Item[]) new Object[newSize];
         for (int i = 0; i < data.length; i++) {
             resizedData[i] = data[i];
@@ -49,6 +48,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * @param item
      */
     public void enqueue(Item item) {
+        if (item == null) {
+            throw new java.lang.NullPointerException();
+        }
         if (size == data.length) {
             resize(data.length * 2);
         }
@@ -61,6 +63,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * @return
      */
     public Item dequeue() {
+        if (size == 0) {
+            throw new java.util.NoSuchElementException(
+                    "ERROR: attempt to remove first item from an empty queue");
+        }
         int i = StdRandom.uniform(0, size);
         Item removedItem = data[i];
         data[i] = data[--size];
@@ -74,6 +80,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
      * @return random sampled item
      */
     public Item sample() {
+        if (size == 0) {
+            throw new java.util.NoSuchElementException(
+                    "ERROR: attempt to remove first item from an empty queue");
+        }
         return data[StdRandom.uniform(0, size)];
     }
 
@@ -97,13 +107,14 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
         /**
          * Create new RandomizedIterator.
          */
-        @SuppressWarnings("unchecked")
         RandomizedIterator() {
             randomizedData = (Item[]) new Object[size];
             for (int i = 0; i < size; i++) {
                 randomizedData[i] = data[i];
             }
-            StdRandom.shuffle(randomizedData, 0, size - 1);
+            if (size > 0) {
+                StdRandom.shuffle(randomizedData, 0, size - 1);
+            }
         }
 
         /**
@@ -148,11 +159,16 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
     public static void main(String[] args) {
         RandomizedQueue<Integer> queue = new RandomizedQueue<Integer>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 10000; i++) {
             queue.enqueue(i);
+            StdOut.println("i=" + i + " size=" + queue.size() + " sample="
+                    + queue.sample());
         }
         for (Integer i : queue) {
             StdOut.println(i);
+        }
+        for (int i = 0; i < 3; i++) {
+            StdOut.println("deque=" + queue.dequeue());
         }
     }
 }

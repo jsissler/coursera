@@ -1,5 +1,4 @@
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 import edu.princeton.cs.algs4.StdOut;
 
@@ -32,6 +31,21 @@ public class Deque<Item> implements Iterable<Item> {
      */
     private class Node {
         /**
+         * item - list data item.
+         */
+        private Item item;
+
+        /**
+         * prev - link to node list successor.
+         */
+        private Node prev;
+
+        /**
+         * next - link to node list predecessor.
+         */
+        private Node next;
+
+        /**
          * Node constructor.
          * 
          * @param item - node data.
@@ -51,21 +65,6 @@ public class Deque<Item> implements Iterable<Item> {
                 next.prev = this;
             }
         }
-
-        /**
-         * item - list data item.
-         */
-        private Item item;
-
-        /**
-         * prev - link to node list successor.
-         */
-        private Node prev;
-
-        /**
-         * next - link to node list predecessor.
-         */
-        private Node next;
     }
 
     /**
@@ -102,9 +101,7 @@ public class Deque<Item> implements Iterable<Item> {
                     "ERROR: attempt to add null item");
         }
 
-        Node node = new Node(item, null, first);
-
-        first = node;
+        first = new Node(item, null, first);
 
         if (size++ == 0) {
             last = first;
@@ -116,15 +113,13 @@ public class Deque<Item> implements Iterable<Item> {
      * 
      * @param item - node data
      */
-    public void addLast(final Item item) {
+    public void addLast(Item item) {
         if (item == null) {
             throw new java.lang.NullPointerException(
                     "ERROR: attempt to add null item");
         }
 
-        Node node = new Node(item, last, null);
-
-        last = node;
+        last = new Node(item, last, null);
 
         if (size++ == 0) {
             first = last;
