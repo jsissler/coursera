@@ -1,3 +1,4 @@
+
 /******************************************************************************
  *  Compilation:  javac Point.java
  *  Execution:    java Point
@@ -74,6 +75,7 @@ public class Point implements Comparable<Point> {
             return (double) (that.y - y) / (double) (that.x - x);
         }
     }
+
     /**
      * Compares two points by y-coordinate, breaking ties by x-coordinate.
      * Formally, the invoking point (x0, y0) is less than the argument point
@@ -116,8 +118,8 @@ public class Point implements Comparable<Point> {
         return "(" + x + ", " + y + ")";
     }
 
-    class SlopeOrder implements Comparator<Point> {
-        final Point p;
+    private class SlopeOrder implements Comparator<Point> {
+        private final Point p;
 
         SlopeOrder(Point p) {
             this.p = p;
