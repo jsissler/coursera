@@ -70,7 +70,7 @@ public class Point implements Comparable<Point> {
             return Double.POSITIVE_INFINITY;
             // horizontal, share y axis
         } else if (y == that.y) {
-            return ((double) y - (double) y) / (double) y; // positive 0
+            return 0.0;
         } else {
             return (double) (that.y - y) / (double) (that.x - x);
         }
@@ -136,8 +136,10 @@ public class Point implements Comparable<Point> {
      * Unit tests the Point data type.
      */
     public static void main(String[] args) {
-        Point p1 = new Point(0, 0);
-        Point p2 = new Point(1, 1);
-        StdOut.println(p1.slopeTo(p2));
+        Point p = new Point(1, 0);
+        Point q = new Point(4, 7);
+        Point r = new Point(6, 0);
+        StdOut.println(p.slopeTo(q));
+        StdOut.println(p.slopeTo(r));
     }
 }
