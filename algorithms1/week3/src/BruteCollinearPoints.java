@@ -44,8 +44,7 @@ public class BruteCollinearPoints {
         }
 
         public boolean isSubSegment(ComparableLineSegment s) {
-            return p.slopeTo(q) == s.p.slopeTo(s.q) && q == s.q
-                    && p.compareTo(s.p) > 0;
+            return p.slopeTo(q) == s.p.slopeTo(s.q) && q == s.q && p.compareTo(s.p) > 0;
         }
     }
 
@@ -57,9 +56,11 @@ public class BruteCollinearPoints {
      * 
      * @param points
      */
-    public BruteCollinearPoints(Point[] points) {
-        if (points == null)
+    public BruteCollinearPoints(Point[] pointsArg) {
+        if (pointsArg == null)
             throw new java.lang.NullPointerException();
+
+        points = Arrays.copyOf(pointsArg, pointsArg.length);
 
         for (Point point : points) {
             if (point == null) {
@@ -67,11 +68,10 @@ public class BruteCollinearPoints {
             }
         }
 
-        this.points = points;
-        Arrays.sort(this.points);
+        Arrays.sort(points);
         Point last = null;
 
-        for (Point point : this.points) {
+        for (Point point : points) {
             if (last != null && point.compareTo(last) == 0) {
                 throw new java.lang.IllegalArgumentException();
             }
@@ -89,12 +89,9 @@ public class BruteCollinearPoints {
                         final Point r = points[k];
                         final Point s = points[l];
 
-                        if (p.slopeTo(q) == q.slopeTo(r)
-                                && q.slopeTo(r) == r.slopeTo(s)) {
-                            ComparableLineSegment segment = new ComparableLineSegment(
-                                    p, s);
-                            int index = Collections
-                                    .binarySearch(comparableSegments, segment);
+                        if (p.slopeTo(q) == q.slopeTo(r) && q.slopeTo(r) == r.slopeTo(s)) {
+                            ComparableLineSegment segment = new ComparableLineSegment(p, s);
+                            int index = Collections.binarySearch(comparableSegments, segment);
                             if (index < 0)
                                 comparableSegments.add(-index - 1, segment);
                         }
@@ -155,6 +152,6 @@ public class BruteCollinearPoints {
      * @return the line segments
      */
     public LineSegment[] segments() {
-        return segments;
+        return Arrays.copyOf(segments, segments.length);
     }
 }

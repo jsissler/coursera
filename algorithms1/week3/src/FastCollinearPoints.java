@@ -43,8 +43,7 @@ public class FastCollinearPoints {
         }
 
         public boolean isSubSegment(ComparableLineSegment s) {
-            return p.slopeTo(q) == s.p.slopeTo(s.q) && q == s.q
-                    && p.compareTo(s.p) > 0;
+            return p.slopeTo(q) == s.p.slopeTo(s.q) && q == s.q && p.compareTo(s.p) > 0;
         }
     }
 
@@ -57,10 +56,10 @@ public class FastCollinearPoints {
      * @param points
      */
     public FastCollinearPoints(Point[] pointsArg) {
-        points = pointsArg;
-
-        if (points == null)
+        if (pointsArg == null)
             throw new java.lang.NullPointerException();
+
+        points = Arrays.copyOf(pointsArg, pointsArg.length);
 
         for (Point point : points) {
             if (point == null) {
@@ -99,8 +98,7 @@ public class FastCollinearPoints {
                         Arrays.sort(array);
                         Point lineStart = array[0];
                         Point lineEnd = array[array.length - 1];
-                        ComparableLineSegment s = new ComparableLineSegment(
-                                lineStart, lineEnd);
+                        ComparableLineSegment s = new ComparableLineSegment(lineStart, lineEnd);
                         int i = Collections.binarySearch(comparableSegments, s);
                         if (i < 0)
                             comparableSegments.add(-i - 1, s);
@@ -121,8 +119,7 @@ public class FastCollinearPoints {
                 Arrays.sort(array);
                 Point lineStart = array[0];
                 Point lineEnd = array[array.length - 1];
-                ComparableLineSegment s = new ComparableLineSegment(lineStart,
-                        lineEnd);
+                ComparableLineSegment s = new ComparableLineSegment(lineStart, lineEnd);
                 int i = Collections.binarySearch(comparableSegments, s);
                 if (i < 0)
                     comparableSegments.add(-i - 1, s);
@@ -181,6 +178,6 @@ public class FastCollinearPoints {
      * @return the line segments
      */
     public LineSegment[] segments() {
-        return segments;
+        return Arrays.copyOf(segments, segments.length);
     }
 }
