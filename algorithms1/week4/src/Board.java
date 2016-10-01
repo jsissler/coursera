@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -7,10 +6,17 @@ import java.util.Map;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Board {
-    final private static Map<Integer, Board> goalCache = new HashMap<Integer, Board>();
+    private static final Map<Integer, Board> GOALCACHE = new HashMap<Integer, Board>();
 
-    final private int[][] tiles;
-    final private int n;
+    private final int[][] tiles;
+    private final int n;
+
+    // construct a board from an n-by-n array of blocks
+    // (where blocks[i][j] = block in row i, column j)
+    public Board(int[][] blocks) {
+        tiles = clone(blocks);
+        n = tiles.length;
+    }
 
     private static int[][] clone(int[][] tiles) {
         int[][] clonedTiles = new int[tiles.length][];
@@ -20,23 +26,16 @@ public class Board {
     }
 
     private static Board getGoalBoard(int n) {
-        if (!goalCache.containsKey(n)) {
+        if (!GOALCACHE.containsKey(n)) {
             int[][] goalTiles = new int[n][n];
             for (int row = 0; row < n; row++)
                 for (int col = 0; col < n; col++)
                     goalTiles[row][col] = row * n + col + 1;
             goalTiles[n - 1][n - 1] = 0;
             Board goalBoard = new Board(goalTiles);
-            goalCache.put(n, goalBoard);
+            GOALCACHE.put(n, goalBoard);
         }
-        return goalCache.get(n);
-    }
-
-    // construct a board from an n-by-n array of blocks
-    // (where blocks[i][j] = block in row i, column j)
-    public Board(int[][] blocks) {
-        tiles = clone(blocks);
-        n = tiles.length;
+        return GOALCACHE.get(n);
     }
 
     public int dimension() {
@@ -49,8 +48,7 @@ public class Board {
         int sum = 0;
         for (int row = 0; row < n; row++)
             for (int col = 0; col < n; col++)
-                if (tiles[row][col] != 0
-                        && tiles[row][col] != goalBoard.tiles[row][col])
+                if (tiles[row][col] != 0 && tiles[row][col] != goalBoard.tiles[row][col])
                     sum++;
         return sum;
     }
@@ -62,8 +60,7 @@ public class Board {
             for (int col = 0; col < n; col++) {
                 int value = tiles[row][col];
                 if (value-- != 0)
-                    sum += Math.abs(row - (value / n))
-                            + Math.abs(col - (value % n));
+                    sum += Math.abs(row - (value / n)) + Math.abs(col - (value % n));
             }
         }
         return sum;
@@ -77,13 +74,12 @@ public class Board {
     // a board that is obtained by exchanging any pair of blocks
     public Board twin() {
         int[][] twinTiles = clone(tiles);
-        for (int row = 0; row < n - 1; row++) {
+        for (int row = 0; row < n; row++) {
             for (int col = 0; col < n - 1; col++) {
-                if (twinTiles[row][col] != 0
-                        && twinTiles[row + 1][col + 1] != 0) {
+                if (twinTiles[row][col] != 0 && twinTiles[row][col + 1] != 0) {
                     int tmp = twinTiles[row][col];
-                    twinTiles[row][col] = twinTiles[row + 1][col + 1];
-                    twinTiles[row + 1][col + 1] = tmp;
+                    twinTiles[row][col] = twinTiles[row][col + 1];
+                    twinTiles[row][col + 1] = tmp;
                     return new Board(twinTiles);
                 }
             }
@@ -93,7 +89,16 @@ public class Board {
 
     // does this board equal y?
     public boolean equals(Object y) {
-        return tiles.equals(((Board) y).tiles);
+        if (y == null || y.getClass() != Board.class)
+            return false;
+        Board that = (Board) y;
+        if (n != that.n)
+            return false;
+        for (int row = 0; row < n; row++)
+            for (int col = 0; col < n; col++)
+                if (tiles[row][col] != that.tiles[row][col])
+                    return false;
+        return true;
     }
 
     // all neighboring boards
@@ -122,8 +127,7 @@ public class Board {
                     }
                     if (col < n - 1) {
                         Board exchRight = new Board(tiles);
-                        exchRight.tiles[row][col] = exchRight.tiles[row][col
-                                + 1];
+                        exchRight.tiles[row][col] = exchRight.tiles[row][col + 1];
                         exchRight.tiles[row][col + 1] = 0;
                         l.add(exchRight);
                     }
@@ -159,12 +163,10 @@ public class Board {
         StdOut.printf("b1=%s\n", b1);
         StdOut.printf("t1=%s\n", t1);
         StdOut.printf("t1 goal? %s\n", t1.isGoal());
-        int tiles3[][] = { { 8, 1, 3 }, { 4, 0, 2 }, { 7, 6, 5 } };
+        int[][] tiles3 = { { 8, 1, 3 }, { 4, 0, 2 }, { 7, 6, 5 } };
         Board b3 = new Board(tiles3);
-        StdOut.printf("b3=%s\nmanhattan=%d hamming=%d", b3, b3.manhattan(),
-                b3.hamming());
-        Board b4 = new Board(
-                new int[][] { { 8, 1, 3 }, { 4, 2, 0 }, { 7, 6, 5 } });
+        StdOut.printf("b3=%s\nmanhattan=%d hamming=%d", b3, b3.manhattan(), b3.hamming());
+        Board b4 = new Board(new int[][] { { 8, 1, 3 }, { 4, 2, 0 }, { 7, 6, 5 } });
         StdOut.printf("b4=%s\nneighbors:\n", b4);
         for (Board neighbor : b4.neighbors())
             StdOut.println(neighbor);
