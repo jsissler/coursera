@@ -49,7 +49,7 @@ public class Solver {
         pqt.insert(new SearchNode(initial.twin(), 0, null));
         SearchNode mint = pqt.delMin();
 
-        int iterations = 0, maxIterations = 1000;
+        int iterations = 0, maxIterations = 1000000;
 
         while (!min.board.isGoal() && !mint.board.isGoal() && iterations++ < maxIterations) {
             min.moves++;
