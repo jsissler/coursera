@@ -111,10 +111,10 @@ class FunSetSuite extends FunSuite {
   test("intersection/diff") {
     val s1to10 = rangeSet(1, 10)
     val s5to15 = rangeSet(5, 15)
-    assert(contains(intersect(s1to10, s5to15), 7))
-    assert(!contains(intersect(s1to10, s5to15), 4))
-    assert(!contains(diff(s1to10, s5to15), 11))
-    assert(contains(diff(s1to10, s5to15), 4))
+    assert(intersect(s1to10, s5to15)(7))
+    assert(!intersect(s1to10, s5to15)(4))
+    assert(!diff(s1to10, s5to15)(11))
+    assert(diff(s1to10, s5to15)(4))
   }
 
   test("filter") {
@@ -123,27 +123,27 @@ class FunSetSuite extends FunSuite {
     val s = filter(s1to10, pred)
     printSet(s1to10)
     printSet(s)
-    assert(contains(s, 9))
-    assert(!contains(s, 10))
-    assert(contains(filter(s1to10, (i: Int) => i < 10), 8))
+    assert(s(9))
+    assert(!s(10))
+    assert(filter(s1to10, i => i < 10)(8))
   }
 
   test("forall") {
     val s = rangeSet(-10000, 10000)
-    assert(!forall(s, (i: Int) => i < 10))
-    assert(forall(s, (i: Int) => math.abs(i) <= 2000))
+    assert(!forall(s, i => i < 10))
+    assert(forall(s, i => math.abs(i) <= 2000))
   }
 
   test("exists") {
     val s = rangeSet(-10000, 10000)
-    assert(exists(s, (i: Int) => i < 10))
-    assert(exists(s, (i: Int) => math.abs(i) <= 2000))
+    assert(exists(s, i => i < 10))
+    assert(exists(s, i => math.abs(i) <= 2000))
   }
     
   test("map") {
     val s = rangeSet(-2, 2)
     printSet(s)
-    printSet(map(s, (i: Int) => i - 1))
-    assert(contains(map(s, (i: Int) => i - 1), -1))
+    printSet(map(s, i => i - 1))
+    assert(contains(map(s, i => i - 1), -1))
   }
 }
