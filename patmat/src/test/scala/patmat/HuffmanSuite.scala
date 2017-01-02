@@ -22,7 +22,7 @@ class HuffmanSuite extends FunSuite {
 
   test("chars of a larger tree") {
     new TestTrees {
-      assert(chars(t2) === List('a','b','d'))
+      assert(chars(t2) === List('a', 'b', 'd'))
     }
   }
 
@@ -35,22 +35,39 @@ class HuffmanSuite extends FunSuite {
     assert(times(List('a', 'a')) == List(('a', 2)))
     assert(times(List('a', 'a', 'c', 'a', 'c', 'a', 'c')) == List(('c', 3), ('a', 4)))
   }
-  
-  /*
+
   test("makeOrderedLeafList for some frequency table") {
-    assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e',1), Leaf('t',2), Leaf('x',3)))
+    assert(makeOrderedLeafList(List(('t', 2), ('e', 1), ('x', 3))) === List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 3)))
   }
 
   test("combine of some leaf list") {
     val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
-    assert(combine(leaflist) === List(Fork(Leaf('e',1),Leaf('t',2),List('e', 't'),3), Leaf('x',4)))
+    assert(combine(leaflist) === List(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4)))
   }
 
+  test("until of some leaf list") {
+    val leaflist = List(Leaf('e', 1), Leaf('t', 2), Leaf('x', 4))
+    assert(until(singleton, combine)(leaflist)
+      === List(Fork(Fork(Leaf('e', 1), Leaf('t', 2), List('e', 't'), 3), Leaf('x', 4), List('e', 't', 'x'), 7)))
+  }
 
   test("decode and encode a very short text should be identity") {
     new TestTrees {
+      println("encode: " + encode(t1)("ab".toList))
+      println("decode: " + decode(t1, List(0, 1)))
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
     }
+  }
+  /*
+    test("decode and encode longer strings using frenchcode and quickEncode") {
+    assert(decode(frenchCode, quickEncode(frenchCode)("thisisatest".toList)) === "thisisatest".toList)
+  }
+  
+  test("encode and decode a sample string using new custome tree") {
+    val myText = "thisisatestofyourcreatecodetreemethod".toList
+    val myTree = createCodeTree(myText)
+    assert(decode(myTree, encode(myTree)(myText)) === myText)
+
   }
 */
 
