@@ -53,22 +53,24 @@ class HuffmanSuite extends FunSuite {
 
   test("decode and encode a very short text should be identity") {
     new TestTrees {
-      println("encode: " + encode(t1)("ab".toList))
-      println("decode: " + decode(t1, List(0, 1)))
       assert(decode(t1, encode(t1)("ab".toList)) === "ab".toList)
     }
   }
-  /*
-    test("decode and encode longer strings using frenchcode and quickEncode") {
-    assert(decode(frenchCode, quickEncode(frenchCode)("thisisatest".toList)) === "thisisatest".toList)
+  
+  test("decode and encode longer strings using frenchcode and quickEncode") {
+    assert(decode(frenchCode, encode(frenchCode)("thisisatest".toList)) === "thisisatest".toList)
   }
   
+/*
+  test("decode and encode longer strings using frenchcode and quickEncode") {
+    assert(decode(frenchCode, quickEncode(frenchCode)("thisisatest".toList)) === "thisisatest".toList)
+  }
+*/
   test("encode and decode a sample string using new custome tree") {
     val myText = "thisisatestofyourcreatecodetreemethod".toList
     val myTree = createCodeTree(myText)
     assert(decode(myTree, encode(myTree)(myText)) === myText)
 
   }
-*/
 
 }
