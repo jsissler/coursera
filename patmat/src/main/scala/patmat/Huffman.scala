@@ -193,7 +193,7 @@ object Huffman {
   /**
    * Write a function that returns the decoded secret
    */
-  def decodedSecret: List[Char] = ???
+  def decodedSecret: List[Char] = decode(frenchCode, secret)
 
   // Part 4a: Encoding using Huffman tree
 
@@ -263,5 +263,12 @@ object Huffman {
    * To speed up the encoding process, it first converts the code tree to a code table
    * and then uses it to perform the actual encoding.
    */
-  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = ???
+  def quickEncode(tree: CodeTree)(text: List[Char]): List[Bit] = {
+    def table = convert(tree)
+    def quickEncodeAcc(text: List[Char], bits: List[Bit]): List[Bit] = {
+      if (text.isEmpty) bits
+      else quickEncodeAcc(text.tail, bits ::: codeBits(table)(text.head)) 
+    }
+    quickEncodeAcc(text, List())
+  }
 }
