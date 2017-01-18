@@ -37,7 +37,7 @@ object Anagrams {
    *  Note: you must use `groupBy` to implement this method!
    */
   def wordOccurrences(w: Word): Occurrences =
-    w.trim().toLowerCase().toList.groupBy(c => c).mapValues(_.size).toList.sorted
+    w.toLowerCase.toList.groupBy(c => c).mapValues(_.length).toList.sorted
 
   /** Converts a sentence into its character occurrence list. */
   def sentenceOccurrences(s: Sentence): Occurrences =
@@ -63,7 +63,8 @@ object Anagrams {
     dictionary.groupBy(s => wordOccurrences(s))
 
   /** Returns all the anagrams of a given word. */
-  def wordAnagrams(word: Word): List[Word] = ???
+  def wordAnagrams(word: Word): List[Word] =
+    dictionaryByOccurrences(wordOccurrences(word))
 
   /**
    * Returns the list of all subsets of the occurrence list.
@@ -88,7 +89,19 @@ object Anagrams {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] = {
+    def occurrenceCombinations(occurrences: Occurrences, acc: Occurrences): Occurrences = occurrences match {
+      case x :: xs =>
+        if (x._2 > 1) occurrenceCombinations((x._1, x._2 - 1) :: xs, x :: acc)
+        else occurrenceCombinations(xs, x :: acc)
+      case _ => acc
+    }
+    if (occurrences == Nil) List(Nil)
+    else {
+      def ssfilt(s: Set[(Char, Int)]): Boolean = s.groupBy(_._1).size == s.size
+      occurrenceCombinations(occurrences, List()).toSet.subsets.filter(ssfilt).toList.map(_.toList.sorted)
+    }
+  }
 
   /**
    * Subtracts occurrence list `y` from occurrence list `x`.
@@ -101,7 +114,12 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
+  def subtract(x: Occurrences, y: Occurrences): Occurrences = {
+    def netsubsets(acc: Map[Char, Int], kv: (Char, Int)): Map[Char, Int] =
+      if (acc(kv._1) == kv._2) acc - kv._1
+      else acc - kv._1 + (kv._1 -> (acc(kv._1) - kv._2))
+    y.groupBy(_._1).mapValues(_.head._2).foldLeft(x.groupBy(_._1).mapValues(_.head._2))(netsubsets).toList.sorted
+  }
 
   /**
    * Returns a list of all anagram sentences of the given sentence.
@@ -144,5 +162,25 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def sentenceAnagramsAcc(so: Occurrences): List[Sentence] = {
+      if (so.isEmpty) {
+        List(Nil)
+      } else {
+        /*
+        combinations(so).filter(dictionaryByOccurrences.contains).flatMap(
+          x => dictionaryByOccurrences(x).flatMap(
+            y => sentenceAnagramsAcc(subtract(so, x)).map(
+              z => y :: z)))
+              */
+        for {
+          x <- combinations(so).filter(dictionaryByOccurrences.contains)
+          y <- dictionaryByOccurrences(x)
+          z <- sentenceAnagramsAcc(subtract(so, x))
+        } yield y :: z
+      }
+    }
+    if (sentence.isEmpty) List(Nil)
+    else sentenceAnagramsAcc(sentenceOccurrences(sentence))
+  }
 }
